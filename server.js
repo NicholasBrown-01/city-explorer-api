@@ -7,7 +7,7 @@ console.log('Our first server');
 const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
-// let data = require('./data/data.json');
+// let data = require('./data/weather.json');
 
 
 // ***Once we bring in express, we call it to create the server***
