@@ -11,6 +11,7 @@ const cors = require('cors');
 app.use(cors());
 const weather = require('./data/weather.json');
 
+
 // *** PORT that my server will run on ***
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => console.log(`Listening on port ${PORT}!`));

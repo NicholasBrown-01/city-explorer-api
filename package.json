@@ -15,9 +15,5 @@
       "type": "git",
       "url": "git+https://github.com/NicholasBrown-01/city-explorer-api"
     },
-    "homepage": "https://github.com/NicholasBrown-01/city-explorer-api/blob/main/README.md",
-    "dependencies": {
-      "dotenv": "^16.0.3",
-      "express": "^4.18.2"
-    }
+    "homepage": "https://github.com/NicholasBrown-01/city-explorer-api/blob/main/README.md"
 }
