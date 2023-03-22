@@ -7,7 +7,7 @@ const app = express();
 require('dotenv').config();
 const cors = require('cors');
 app.use(cors());
-const weatherData = require('./data/weather.json');
+const weather = require('./data/weather.json');
 
 // *** PORT that my server will run on ***
 const PORT = process.env.PORT || 3002;
@@ -31,7 +31,7 @@ app.get('/weather', (request, response, next) => {
     let lon = request.query.lon;
     let cityName = request.query.searchQuery;
 
-    let city = weatherData.find(city => city.city_name.toLowerCase() === cityName.toLowerCase());
+    let city = weather.find(city => city.city_name.toLowerCase() === cityName.toLowerCase());
     let weatherToSendFrontEnd = city.data.map(dayObj => new Forecast(dayObj));
     response.status(200).send(weatherToSendFrontEnd);
 
@@ -53,7 +53,7 @@ class Forecast {
 // function getWeather(request, response) {
 //   let {searchquery} = request.query;
 //   console.log('Request ' + request.query);
-//   let city = weatherData.find(city => city.city_name.toLowerCase() === searchquery.toLowerCase
+//   let city = weather.find(city => city.city_name.toLowerCase() === searchquery.toLowerCase
 //   ());
 //   console.log('City' + city);
 //   try {
