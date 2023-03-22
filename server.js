@@ -35,7 +35,8 @@ app.get('/hello', (request, response) => {
 function getWeather(request, response) {
   let {searchquery} = request.query;
   console.log('Request ' + request.query);
-  let city = weatherData.find(city => city.city_name.toLowerCase() === searchquery.toLowerCase());
+  let city = weatherData.find(city => city.city_name.toLowerCase() === searchquery.toLowerCase
+  ());
   console.log('City' + city);
   try {
     let weather = city.data.map(day => new Forecast(day));
