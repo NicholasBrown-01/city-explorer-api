@@ -10,6 +10,10 @@ require('dotenv').config();
 const cors = require('cors');
 app.use(cors());
 const weather = require('./data/weather.json');
+//?LAB 08 BELOW//
+const axios = require('axios');
+const { application } = require('express');
+//?LAB 08 ABOVE//
 
 
 // *** PORT that my server will run on ***
@@ -21,6 +25,31 @@ app.listen(PORT, () => console.log(`Listening on port ${PORT}!`));
 app.get('/', (request, response) => {
   response.status(200).send('Welcome to my server!');
 });
+
+
+/*
+ *** FOR YOUR LAB - WEATHER
+ *** http://api.weatherbit.io/v2.0/forecast/daily?key=<your API key>&lat=<from your frontend>&lon=<from your frontend>&days=5&units=I
+
+
+
+ *** FOR YOUR LAB - MOVIES ***
+ *** https://api.themoviedb.org/3/search/movie?api_key=<your MOVIE DB KEY>&query=<city info from frontend>
+*/
+
+// TODO: BUILD AN ENDPOINT THAT WILL CALL OUT TO AN API
+// app.get('/movie'), async (request, response, next) => {
+
+//   try {
+
+//     response.status(200).send('This was a test');
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
+// TODO: BUILD ANOTHER CLASS TO TRIM DOWN THAT DATA
+
 
 app.get('/hello', (request, response) => {
   let userFirstName = request.query.firstName;
