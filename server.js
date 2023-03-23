@@ -9,23 +9,16 @@ const app = express();
 require('dotenv').config();
 const cors = require('cors');
 app.use(cors());
-const weather = require('./data/weather.json');
 //?LAB 08 BELOW//
+// const weather = require('./data/weather.json');
 const axios = require('axios');
-const { application } = require('express');
+// const {application} = require('express');
 //?LAB 08 ABOVE//
 
 
 // *** PORT that my server will run on ***
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => console.log(`Listening on port ${PORT}!`));
-
-
-// *** Create Endpoints *** //
-app.get('/', (request, response) => {
-  response.status(200).send('Welcome to my server!');
-});
-
 
 /*
  *** FOR YOUR LAB - WEATHER
@@ -37,18 +30,35 @@ app.get('/', (request, response) => {
  *** https://api.themoviedb.org/3/search/movie?api_key=<your MOVIE DB KEY>&query=<city info from frontend>
 */
 
-// TODO: BUILD AN ENDPOINT THAT WILL CALL OUT TO AN API
-// app.get('/movie'), async (request, response, next) => {
+//? Lab08 Below//
+// *** BUILD AN ENDPOINT THAT WILL CALL OUT TO AN API Thank you Andrew Vreeland with Class Code Review ***
+app.get('/movie', async (request, response, next) => {
 
-//   try {
+  try {
 
-//     response.status(200).send('This was a test');
-//   } catch (error) {
-//     next(error);
-//   }
-// });
+    let city = request.query.searchQuery;
+    let url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_DB_KEY}&query=${city}`;
+    let movieResultsFromAxios = await axios.get(url);
 
-// TODO: BUILD ANOTHER CLASS TO TRIM DOWN THAT DATA
+    //! How do I research and look at the data do determine what data you need
+    let moviesToSendFront = movieResultsFromAxios.data.results.map(movieData => new Movie(movieData));
+
+    console.log(moviesToSendFront);
+
+    response.status(200).send(moviesToSendFront);
+
+  } catch (error) {
+    next(error);
+  }
+});
+
+class Movie {
+  constructor(movieData) {
+    // *** Map the relevant fields from the API response to this object
+    this.data = movieData;
+  }
+}
+//? Lab08 Above//
 
 
 app.get('/hello', (request, response) => {
@@ -57,15 +67,21 @@ app.get('/hello', (request, response) => {
   response.status(200).send(`Hello ${userFirstName} ${userLastName}! Welcome to the server!`);
 });
 
-app.get('/weather', (request, response, next) => {
+
+//? Lab08 Below//
+app.get('/weather', async (request, response, next) => {
   try {
     let lat = request.query.lat;
     let lon = request.query.lon;
-    let cityName = request.query.searchQuery;
+    let url = `http://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHERBIT_API_KEY}&lat=${lat}&lon=${lon}&days=5&units=I`;
+    let weatherResults = await axios.get(url);
+    console.log(weatherResults.data);
 
-    let city = weather.find(city => city.city_name.toLowerCase() === cityName.toLowerCase());
-    let weatherToSendFrontEnd = city.data.map(dayObj => new Forecast(dayObj));
+    // ! How do I know this needs 2 .data?
+    let weatherToSendFrontEnd = weatherResults.data.data.map(dayObj => new Forecast(dayObj));
+
     response.status(200).send(weatherToSendFrontEnd);
+    //? Lab08 Above//
 
   } catch (error) {
     next(error);
@@ -78,8 +94,6 @@ class Forecast {
     this.description = dayObj.weather.description;
 
   }
-
-
 }
 
 // function getWeather(request, response) {
