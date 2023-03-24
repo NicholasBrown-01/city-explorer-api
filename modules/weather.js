@@ -1,20 +1,39 @@
 'use strict';
 const axios = require('axios');
 
+//? Lab 10 Below //
+let cache = {};
+
+
 async function getWeather(request, response, next){
 
   try {
     let lat = request.query.lat;
     let lon = request.query.lon;
-    let url = `http://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHERBIT_API_KEY}&lat=${lat}&lon=${lon}&days=5&units=I`;
+    let cityFromFrontEnd = request.query.searchQuery;
+    let cityCache = `${cityFromFrontEnd}`;
 
-    let weatherResults = await axios.get(url);
-    console.log(weatherResults.data);
+    if (cache[cityCache] && (Date.now() - cache[cityCache].timestamp) < 100000) {
 
-    // ! How do I know this needs 2 .data?
-    let weatherToSendFrontEnd = weatherResults.data.data.map(dayObj => new Forecast(dayObj));
+      console.log('Weather: Cache was hit!!!!!!!!!', cache);
+      response.status(200).send(cache[cityCache].data);
 
-    response.status(200).send(weatherToSendFrontEnd);
+    } else {
+
+      console.log('Weather: No items in cache');
+
+      let url = `http://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHERBIT_API_KEY}&lat=${lat}&lon=${lon}&days=5&units=I`;
+      let weatherResults = await axios.get(url);
+      let weatherToSendFrontEnd = weatherResults.data.data.map(dayObj => new Forecast(dayObj));
+
+      cache[cityCache] = {
+        data: weatherToSendFrontEnd,
+        timestamp: Date.now()
+      };
+      console.log('Added to cache:', cache);
+      //? Lab 10 Above //
+
+    }
 
   } catch (error) {
     next(error);
