@@ -10,10 +10,10 @@
 
 ## Getting Started
 
-1. Create the server
-2. Download node/json package templates to build the project
-3. Input initial data for server operation
-4. Verify data can get to endpoint
+1. Add a "let cache"
+2. Insert "if/else" into the "try/catch"
+3. Relocate associate URL's and variables needed into the else stament
+4. Add a final update to the cache to be pushed with data and a timestamp.
 
 
 ## Architecture
@@ -28,4 +28,16 @@
 
 - Audrey
 - Justin Hamerly
+
+Name of feature: Cache Memory
+
+Estimate of time needed to complete: 2 hrs
+
+Start time:1 p.m PST
+
+Finish time: 1:45 PST
+
+Actual time needed to complete: 45 min
+
+![Alt text](Lab10%20snip.png)
 ![Wire](Lab07%20Wire.png)
