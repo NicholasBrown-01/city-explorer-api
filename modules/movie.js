@@ -1,21 +1,36 @@
 'use strict';
 const axios = require('axios');
 
+//? LAB 10 Below //
+let cache = {};
 
-async function getMovie(request, response, next){
+async function getMovie(request, response, next) {
 
   try {
-
     let city = request.query.searchQuery;
-    let url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_DB_KEY}&query=${city}`;
-    let movieResultsFromAxios = await axios.get(url);
+    let movieFromFrontEnd = request.query.searchQuery;
+    let movieCache = `${movieFromFrontEnd}`;
 
-    //! How do I research and look at the data do determine what data you need
-    let moviesToSendFront = movieResultsFromAxios.data.results.map(movieData => new Movie(movieData));
+    if (cache[movieCache] && (Date.now() - cache[movieCache].timestamp) < 100000) {
 
-    console.log(moviesToSendFront);
+      console.log('Movie: Cache was hit!!!!!!!!!', cache);
+      response.status(200).send(cache[movieCache].data);
 
-    response.status(200).send(moviesToSendFront);
+    } else {
+
+      console.log('Movie: No items in cache');
+
+      let url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_DB_KEY}&query=${city}`;
+      let movieResultsFromAxios = await axios.get(url);
+      let moviesToSendFront = movieResultsFromAxios.data.results.map(movieData => new Movie(movieData));
+
+      cache[movieCache] = {
+        data: moviesToSendFront,
+        timestamp: Date.now()
+      };
+      console.log('Added to cache:', cache);
+    }
+    //? Lab 10 Above //
 
   } catch (error) {
     next(error);
